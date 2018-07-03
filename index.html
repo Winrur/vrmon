@@ -20,57 +20,20 @@
   	AFRAME.registerComponent("pokemon", {
   		schema: {},
   		init: function(){
-  			const options = {
-  				protocol: "https",
-  				hostName: "pokeapi.co",
-  				versionPath: "/api/v2/",
-  				cache: true,
-  				timeout: 5 * 1000 // 5sk
-			}
-
-  			const P = new Pokedex.Pokedex(options);
-  			var pokeIdList = [];
-  			var pokeSprite;
-  			var testVar = 1;
-  			console.log(pokeNameList[0]);
-  			for(var i = 1; i <= 802; i++){
-  				pokeIdList.push(i);
-  				//P.resource(["/api/v2/pokemon/" + 500])
-  				.then(function(response){
-  					//pokeSprite = response[0].sprites["front_default"];
-  				})
-  				.catch(function(error){
-  					console.log(error);
-  				})
-
-  			};
-  			  	setInterval(function(){
-  					P.resource(["/api/v2/pokemon/" + testVar])
-  					.then(function(response){
-  					pokeSprite = response[0].sprites["front_default"];
-  					console.log("test");
-  					})
-  					.catch(function(error){
-  					console.log(error);
-  				})
-  					fbRef.doc(testVar).update({
-  						default_sprite: `${pokeSprite}`
-  					})
-  					testVar++;
-  				},2000);
-  			//P.getPokemonByName(["pikachu", "eevee", "gengar"])
-  			//.then(function(response){
-  			//})
-  			//.catch(function(error){
-  			//	console.log("ERROR: " + error);
-  			//})
+  			var pokeplane = document.getElementById("pokeplane");
+  			var currentPokemon;
+  			fbRef.doc(Math.floor(Math.random() * 801 + 1).toString()).get()
+  			.then(function(doc){
+  				currentPokemon = doc.data();
+  				pokeplane.setAttribute("src", currentPokemon.sprite);
+  			})
   		}
   	})
   </script>
 	</head>
 	<body>
 		<a-scene altspace="fullspace: true">
-			<a-box pokemon scale="2 2 2"></a-box>
+			<a-plane id="pokeplane" transparent="true" pokemon n-billboard position="0 2" scale="2 2"></a-box>
 		</a-scene>
 	</body>
 </html>
