@@ -3,6 +3,19 @@
   <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
   <script src="https://sdk.altvr.com/libs/altspace.js/2.9.0/altspace.min.js"></script>
   <script src="https://unpkg.com/pokeapi-js-wrapper/dist/index.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
+  <script type="text/javascript" src="pokemon.js"></script>
+  <script>
+  	// Initialize Firebase
+  	firebase.initializeApp({
+  		apiKey: 'AIzaSyDHxGrV0pEYMF_jQhME-65pVNz1AteCybg',
+  		authDomain: 'vrmon-d2a0f.firebaseapp.com',
+  		projectId: 'vrmon-d2a0f'
+	});
+	// Initialize Cloud Firestore through Firebase
+	var db = firebase.firestore();
+	var fbRef = db.collection("pokemon");
+ </script>
   <script>
   	AFRAME.registerComponent("pokemon", {
   		schema: {},
@@ -12,20 +25,45 @@
   				hostName: "pokeapi.co",
   				versionPath: "/api/v2/",
   				cache: true,
-  				timeout: 5 * 1000 // 5s
+  				timeout: 5 * 1000 // 5sk
 			}
+
   			const P = new Pokedex.Pokedex(options);
-  			var pokelist = new Array(45);
-  			for(var i = 0; i <= pokelist.length; i++){
-  				pokelist[i] = i;
-  				console.log(pokelist[i]);
-  			}
-  			P.getPokemonByName(["pikachu", "eevee", "gengar"])
-  			.then(function(response){
-  			})
-  			.catch(function(error){
-  				console.log("ERROR: " + error);
-  			})
+  			var pokeIdList = [];
+  			var pokeSprite;
+  			var testVar = 1;
+  			console.log(pokeNameList[0]);
+  			for(var i = 1; i <= 802; i++){
+  				pokeIdList.push(i);
+  				//P.resource(["/api/v2/pokemon/" + 500])
+  				.then(function(response){
+  					//pokeSprite = response[0].sprites["front_default"];
+  				})
+  				.catch(function(error){
+  					console.log(error);
+  				})
+
+  			};
+  			  	setInterval(function(){
+  					P.resource(["/api/v2/pokemon/" + testVar])
+  					.then(function(response){
+  					pokeSprite = response[0].sprites["front_default"];
+  					console.log("test");
+  					})
+  					.catch(function(error){
+  					console.log(error);
+  				})
+  					fbRef.doc(testVar).update({
+  						default_sprite: `${pokeSprite}`
+  					})
+  					testVar++;
+  				},2000);
+  			//P.getPokemonByName(["pikachu", "eevee", "gengar"])
+  			//.then(function(response){
+  			//})
+  			//.catch(function(error){
+  			//	console.log("ERROR: " + error);
+  			//})
   		}
   	})
   </script>
